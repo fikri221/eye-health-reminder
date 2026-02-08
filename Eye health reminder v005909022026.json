@@ -1,0 +1,198 @@
+{
+  "name": "Eye health reminder",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "aee33881-6d2e-4302-a9a8-66745b9210a4",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "chatId": "385897376",
+        "text": "=👀 Eye Break Time!  \n\n• Berkedip pelan 10x \n• Lihat objek jauh 20 detik \n• Lepaskan fokus dari layar  \n\n💧 Minum air juga ya",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        672,
+        0
+      ],
+      "id": "33fa5086-0b08-475f-98fc-4498e979aa81",
+      "name": "Send a text message",
+      "webhookId": "16f6a056-0548-49fa-be94-33d44cfdc8be",
+      "credentials": {
+        "telegramApi": {
+          "id": "AVYLwYcKiBCKXnN3",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const staticData = $getWorkflowStaticData('global');\nstaticData.lastSent = Date.now();\n\nreturn items;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        224
+      ],
+      "id": "abc00c55-c6b2-4efc-948c-fb4862ffc1d1",
+      "name": "Set Last Sent Time",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "24707ecc-bf50-4b95-8cf4-261d683ba0a1",
+              "leftValue": "={{ ($json.shouldSend || false) }}",
+              "rightValue": "=true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        0
+      ],
+      "id": "f743eacd-1ce2-40f3-8b9e-0cde686240e2",
+      "name": "If: Should Send Now?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "208b4976-05ed-4a94-ab87-75757e8627f2",
+              "leftValue": "={{\n  (() => {\n    const now = new Date();\n    const hour = now.getHours(); // pakai timezone server\n    const day = now.getDay();\n\n    const isWeekDay = day >= 1 && day <= 1;\n    const isWorkingHour = hour >= 9 && hour < 18;\n\n    return false;\n  })()\n}}\n",
+              "rightValue": "true ",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        0,
+        224
+      ],
+      "id": "a9171f1d-5909-4aca-95fc-cf59bb24f152",
+      "name": "If: Is Weekday and Working Hours?",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const staticData = $getWorkflowStaticData('global');\n\nif (!staticData.lastSent) {\n  staticData.lastSent = 0;\n}\n\nconst now = Date.now();\nconst date = new Date(now);\nconst hour = date.getHours();\nconst day = date.getDay();\n\n// interval dinamis\nlet intervalMinutes = 20;\nif (hour >= 12 && hour < 15) intervalMinutes = 30;\nif (hour >= 15) intervalMinutes = 35;\n\nconst diffMinutes = (now - staticData.lastSent) / 60000;\n\nconst isWeekDay = day >= 1 && day <= 5;\nconst isWorkingHour = hour >= 9 && hour < 18;\n\nconst shouldSend =\n  diffMinutes >= intervalMinutes &&\n  isWeekDay &&\n  isWorkingHour;\n\nconsole.log(\"shouldSend: \", shouldSend);\n\n// update lastSent HANYA kalau benar-benar kirim\nif (shouldSend) {\n  staticData.lastSent = now;\n}\n\nreturn [{\n  json: {\n    now,\n    lastSent: staticData.lastSent,\n    diffMinutes,\n    intervalMinutes,\n    isWeekDay,\n    isWorkingHour,\n    shouldSend\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "0abe86a9-472c-404b-b917-98753f5ba8d2",
+      "name": "Check & Update Last Sent"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Check & Update Last Sent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message": {
+      "main": [
+        []
+      ]
+    },
+    "If: Should Send Now?": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check & Update Last Sent": {
+      "main": [
+        [
+          {
+            "node": "If: Should Send Now?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "4c1fce19-7831-4108-a8b5-c2bc1128c66f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e633a847c170d983345c2fa6d1504473ac10f4fafbd95a2744148c2669a94080"
+  },
+  "id": "OZgaBC1a9kIMVzATDqvqM",
+  "tags": []
+}
