@@ -1,0 +1,285 @@
+[
+    {
+        "Id": "c2a2f75b78f22ab858663a042d0c5f0f3db94cb93993062bcadfa0e20e21d012",
+        "Created": "2026-02-05T03:29:19.77692772Z",
+        "Path": "tini",
+        "Args": [
+            "--",
+            "/docker-entrypoint.sh"
+        ],
+        "State": {
+            "Status": "exited",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-02-05T10:43:18.253503364Z",
+            "FinishedAt": "2026-02-05T11:17:47.233930289Z"
+        },
+        "Image": "sha256:5fd65c3db08941f40c63db0fcdeee937c61a0619618312e2711c475148c22e12",
+        "ResolvConfPath": "/var/lib/docker/containers/c2a2f75b78f22ab858663a042d0c5f0f3db94cb93993062bcadfa0e20e21d012/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/c2a2f75b78f22ab858663a042d0c5f0f3db94cb93993062bcadfa0e20e21d012/hostname",
+        "HostsPath": "/var/lib/docker/containers/c2a2f75b78f22ab858663a042d0c5f0f3db94cb93993062bcadfa0e20e21d012/hosts",
+        "LogPath": "/var/lib/docker/containers/c2a2f75b78f22ab858663a042d0c5f0f3db94cb93993062bcadfa0e20e21d012/c2a2f75b78f22ab858663a042d0c5f0f3db94cb93993062bcadfa0e20e21d012-json.log",
+        "Name": "/eye-health-reminder-n8n-1",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "eye-health-reminder_default",
+            "PortBindings": {
+                "5678/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "5678"
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "unless-stopped",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "host",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": [],
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": false,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "Mounts": [
+                {
+                    "Type": "volume",
+                    "Source": "eye-health-reminder_n8n_data",
+                    "Target": "/home/node/.n8n",
+                    "VolumeOptions": {}
+                }
+            ],
+            "MaskedPaths": [
+                "/proc/asound",
+                "/proc/acpi",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/sys/firmware",
+                "/sys/devices/virtual/powercap"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "ID": "c2a2f75b78f22ab858663a042d0c5f0f3db94cb93993062bcadfa0e20e21d012",
+                "LowerDir": "/var/lib/docker/overlay2/7bdfa81f50635c9ce28e7ed802efa1a9cab0c385360d16cf6bc33ef8a1a24bcb-init/diff:/var/lib/docker/overlay2/2edaa652e8bdc813d3a2e8d9c84694033130a2762868086858a1537ab58d08c5/diff:/var/lib/docker/overlay2/2ae4a2a59b0b00b51234c7d7f19c4df6dc94ebb46192d130b2123b8f63ed6327/diff:/var/lib/docker/overlay2/3262026ff9dae6861ffc8e6a0f2210d81deae6f8dc0d64e44b18915d70d065a3/diff:/var/lib/docker/overlay2/2a4c3b8e740abd62f1d9ed64a44891f034dd2b3c040d747a42e930690467fe90/diff:/var/lib/docker/overlay2/0796d7e6df303c3189d0847fa3c2b5a4bfe7ce1ac0d614fd9cb51484515eee2b/diff:/var/lib/docker/overlay2/c15eb34ec7ff43a0293bd428f0aa6fa28d82cedcb54e65de5ea65fb3c9b43dcb/diff:/var/lib/docker/overlay2/85dbebe0a8b36e993aebe28e98556efee8976bc47ef79eb5b214371078ce40cf/diff:/var/lib/docker/overlay2/49b42643c570ec44e854fa9a35c1bbaa21cc3826d17b88bc368602b91ffb6361/diff:/var/lib/docker/overlay2/cc3fede589987ac9b9390abb48355876d2bb7f304aef01def5cb20f8e6ef3a92/diff:/var/lib/docker/overlay2/3c8980dc6c8620199959a7fa9faa087c4bf30afc411887c0d76b16880714e925/diff:/var/lib/docker/overlay2/ca31e0ae7542f5dd4a64413cfc3d53232dc8daec36740c8e59655b9b024f6a77/diff:/var/lib/docker/overlay2/1a95d0c7065de7c9f94ed6d4f5701e77c518384d180b88f304d757208d57d1e3/diff",
+                "MergedDir": "/var/lib/docker/overlay2/7bdfa81f50635c9ce28e7ed802efa1a9cab0c385360d16cf6bc33ef8a1a24bcb/merged",
+                "UpperDir": "/var/lib/docker/overlay2/7bdfa81f50635c9ce28e7ed802efa1a9cab0c385360d16cf6bc33ef8a1a24bcb/diff",
+                "WorkDir": "/var/lib/docker/overlay2/7bdfa81f50635c9ce28e7ed802efa1a9cab0c385360d16cf6bc33ef8a1a24bcb/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [
+            {
+                "Type": "volume",
+                "Name": "eye-health-reminder_n8n_data",
+                "Source": "/var/lib/docker/volumes/eye-health-reminder_n8n_data/_data",
+                "Destination": "/home/node/.n8n",
+                "Driver": "local",
+                "Mode": "z",
+                "RW": true,
+                "Propagation": ""
+            }
+        ],
+        "Config": {
+            "Hostname": "c2a2f75b78f2",
+            "Domainname": "",
+            "User": "node",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "ExposedPorts": {
+                "5678/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "N8N_PROTOCOL=http",
+                "TZ=Asia/Jakarta",
+                "N8N_BASIC_AUTH_ACTIVE=false",
+                "N8N_HOST=localhost",
+                "N8N_PORT=5678",
+                "NODE_VERSION=22.22.0",
+                "NPM_CONFIG_UPDATE_NOTIFIER=false",
+                "YARN_DISABLE_SELF_UPDATE_CHECK=true",
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NODE_ICU_DATA=/usr/local/lib/node_modules/full-icu",
+                "NODE_PATH=/opt/nodejs/node-v22.22.0/lib/node_modules",
+                "NODE_ENV=production",
+                "N8N_RELEASE_TYPE=stable",
+                "SHELL=/bin/sh"
+            ],
+            "Cmd": null,
+            "Image": "n8nio/n8n:latest",
+            "Volumes": null,
+            "WorkingDir": "/home/node",
+            "Entrypoint": [
+                "tini",
+                "--",
+                "/docker-entrypoint.sh"
+            ],
+            "OnBuild": null,
+            "Labels": {
+                "com.docker.compose.config-hash": "a787d8ae717dce23861912c647c1125319b6af0480a8c1a5a3e9811b7929fe87",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.depends_on": "",
+                "com.docker.compose.image": "sha256:5fd65c3db08941f40c63db0fcdeee937c61a0619618312e2711c475148c22e12",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "eye-health-reminder",
+                "com.docker.compose.project.config_files": "C:\\personal\\eye-health-reminder\\docker-compose.yaml",
+                "com.docker.compose.project.working_dir": "C:\\personal\\eye-health-reminder",
+                "com.docker.compose.service": "n8n",
+                "com.docker.compose.version": "2.34.0",
+                "com.docker.dhi.chain-id": "sha256:ee90d364f250e6b715b0b7b88e67b19a76c7adabad9e253bad24ed1ed473b61f",
+                "com.docker.dhi.compliance": "cis",
+                "com.docker.dhi.created": "2026-01-23T15:43:22Z",
+                "com.docker.dhi.date.end-of-life": "2027-04-30",
+                "com.docker.dhi.date.release": "2024-04-24",
+                "com.docker.dhi.definition": "image/node/alpine-3.22/22-dev",
+                "com.docker.dhi.distro": "alpine-3.22",
+                "com.docker.dhi.flavor": "",
+                "com.docker.dhi.name": "dhi/node",
+                "com.docker.dhi.package-manager": "apk",
+                "com.docker.dhi.shell": "busybox",
+                "com.docker.dhi.title": "Node.js 22.x (dev)",
+                "com.docker.dhi.url": "https://dhi.io/catalog/node",
+                "com.docker.dhi.variant": "dev",
+                "com.docker.dhi.version": "22.22.0-alpine3.22-dev",
+                "org.opencontainers.image.description": "Workflow Automation Tool",
+                "org.opencontainers.image.source": "https://github.com/n8n-io/n8n",
+                "org.opencontainers.image.title": "n8n",
+                "org.opencontainers.image.url": "https://n8n.io",
+                "org.opencontainers.image.version": "2.6.3"
+            }
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "",
+            "SandboxKey": "",
+            "Ports": {},
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "",
+            "Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "MacAddress": "",
+            "Networks": {
+                "eye-health-reminder_default": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                        "eye-health-reminder-n8n-1",
+                        "n8n",
+                        "c2a2f75b78f2"
+                    ],
+                    "MacAddress": "",
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "dbe356b3833113ebfca08fde87089aa8b537c8f9c843e935afbe27c860855491",
+                    "EndpointID": "",
+                    "Gateway": "",
+                    "IPAddress": "",
+                    "IPPrefixLen": 0,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "eye-health-reminder-n8n-1",
+                        "n8n",
+                        "c2a2f75b78f2"
+                    ]
+                }
+            }
+        }
+    }
+]

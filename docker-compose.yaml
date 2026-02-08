@@ -10,6 +10,7 @@ services:
       - N8N_HOST=localhost
       - N8N_PORT=5678
       - N8N_PROTOCOL=http
+      - GENERIC_TIMEZONE=Asia/Jakarta
       - TZ=Asia/Jakarta
     volumes:
       - n8n_data:/home/node/.n8n

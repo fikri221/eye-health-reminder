@@ -1,0 +1,210 @@
+{
+  "name": "Eye health reminder",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -608,
+        -48
+      ],
+      "id": "79e088f4-8a6f-4e27-abda-90bd6acec8c0",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "chatId": "385897376",
+        "text": "=👀 Eye Break Time!  \n\n• Berkedip pelan 10x \n• Lihat objek jauh 20 detik \n• Lepaskan fokus dari layar  \n\n💧 Minum air juga ya",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        64,
+        -48
+      ],
+      "id": "9d1e12b0-378c-45f2-90b8-e949dda4ce4d",
+      "name": "Send a text message",
+      "webhookId": "16f6a056-0548-49fa-be94-33d44cfdc8be",
+      "credentials": {
+        "telegramApi": {
+          "id": "HnoGX7g6bURBepuV",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const staticData = $getWorkflowStaticData('global')\n\nreturn {\n  json: {\n    data: staticData,\n    lastSent: staticData.lastSent || 0,\n    now: Date.now()\n  }\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -384,
+        -48
+      ],
+      "id": "e9e3c205-ec24-45cc-acac-fb01a539d935",
+      "name": "Get Last Sent Time"
+    },
+    {
+      "parameters": {
+        "jsCode": "const staticData = $getWorkflowStaticData('global');\nstaticData.lastSent = Date.now();\n\nreturn items;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        288,
+        -48
+      ],
+      "id": "623828dc-6010-4518-9b3e-5aa849abaef7",
+      "name": "Set Last Sent Time"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "24707ecc-bf50-4b95-8cf4-261d683ba0a1",
+              "leftValue": "={{\n  (() => {\n    const now = $json.now;\n    const formattedDate = new Date(now);\n    const lastSent = $json.lastSent;\n    const hour = formattedDate.getHours();\n    const day = formattedDate.getDay();\n\n    // Tentukan interval berdasarkan jam\n    let intervalMinutes = 25;\n    if (hour >= 12 && hour < 15) intervalMinutes = 45;\n    if (hour >= 15) intervalMinutes = 60;\n\n    const diffMinutes = (now - lastSent) / 60000;\n\n    const isWeekDay = day >= 1 && day <= 5;\n    const isWorkingHour = hour >= 9 && hour < 18;\n\n    // Langsung return true jika sudah melewati interval, isWeekDay dan isWorkingHour, atau false jika belum\n    return diffMinutes >= intervalMinutes && isWorkingHour;\n  })()\n}}",
+              "rightValue": "=true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -160,
+        -48
+      ],
+      "id": "665a649f-67e6-47d8-b3ee-d8c2d5f3b3a6",
+      "name": "If: Should Send Now?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "208b4976-05ed-4a94-ab87-75757e8627f2",
+              "leftValue": "={{\n  (() => {\n    const now = new Date();\n    const hour = now.getHours(); // pakai timezone server\n    const day = now.getDay();\n\n    const isWeekDay = day >= 1 && day <= 1;\n    const isWorkingHour = hour >= 9 && hour < 18;\n\n    return false;\n  })()\n}}\n",
+              "rightValue": "true ",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -608,
+        176
+      ],
+      "id": "446dfc47-be97-43f1-8b8a-4e05442c4abb",
+      "name": "If: Is Weekday and Working Hours?",
+      "disabled": true
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Last Sent Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message": {
+      "main": [
+        [
+          {
+            "node": "Set Last Sent Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Last Sent Time": {
+      "main": [
+        [
+          {
+            "node": "If: Should Send Now?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If: Should Send Now?": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "If: Is Weekday and Working Hours?": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "d562b783-360c-498d-b90a-bc25de3a48eb",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "98eb274eba28088dbbe38fd4e95a7dedc550e77054dffc1fad94aaa1b0b64c60"
+  },
+  "id": "EQv6bvsCxA3mcy1S4JWzR",
+  "tags": []
+}
