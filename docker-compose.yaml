@@ -1,22 +1,33 @@
 version: "3.8"
 
 services:
+  postgres:
+    image: postgres:16
+    container_name: eye-health-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: eye_health
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
   n8n:
     image: n8nio/n8n:latest
+    container_name: eye-health-n8n
+    restart: unless-stopped
     ports:
       - "5678:5678"
     environment:
-      - N8N_BASIC_AUTH_ACTIVE=false
-      - N8N_HOST=localhost
-      - N8N_PORT=5678
-      - N8N_PROTOCOL=http
-      - GENERIC_TIMEZONE=Asia/Jakarta
-      - TZ=Asia/Jakarta
+      DB_TYPE: sqlite
+      TZ: Asia/Jakarta
     volumes:
       - n8n_data:/home/node/.n8n
-      - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
-    restart: unless-stopped
+    depends_on:
+      - postgres
 
 volumes:
+  postgres_data:
   n8n_data:

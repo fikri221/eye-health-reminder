@@ -1,0 +1,232 @@
+{
+  "name": "Eye health reminder",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        96
+      ],
+      "id": "aee33881-6d2e-4302-a9a8-66745b9210a4",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "chatId": "385897376",
+        "text": "=👀 Eye Break Time!  \n\n• Berkedip pelan 10x \n• Lihat objek jauh 20 detik \n• Lepaskan fokus dari layar  \n\n💧 Minum air juga ya",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        672,
+        0
+      ],
+      "id": "33fa5086-0b08-475f-98fc-4498e979aa81",
+      "name": "Send a text message",
+      "webhookId": "16f6a056-0548-49fa-be94-33d44cfdc8be",
+      "credentials": {
+        "telegramApi": {
+          "id": "AVYLwYcKiBCKXnN3",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const staticData = $getWorkflowStaticData('global');\nstaticData.lastSent = Date.now();\n\nreturn items;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        640
+      ],
+      "id": "abc00c55-c6b2-4efc-948c-fb4862ffc1d1",
+      "name": "Set Last Sent Time",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "24707ecc-bf50-4b95-8cf4-261d683ba0a1",
+              "leftValue": "={{ ($json.shouldSend || false) }}",
+              "rightValue": "=true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        0
+      ],
+      "id": "f743eacd-1ce2-40f3-8b9e-0cde686240e2",
+      "name": "If: Should Send Now?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "208b4976-05ed-4a94-ab87-75757e8627f2",
+              "leftValue": "={{\n  (() => {\n    const now = new Date();\n    const hour = now.getHours(); // pakai timezone server\n    const day = now.getDay();\n\n    const isWeekDay = day >= 1 && day <= 1;\n    const isWorkingHour = hour >= 9 && hour < 18;\n\n    return false;\n  })()\n}}\n",
+              "rightValue": "true ",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        0,
+        416
+      ],
+      "id": "a9171f1d-5909-4aca-95fc-cf59bb24f152",
+      "name": "If: Is Weekday and Working Hours?",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const staticData = $getWorkflowStaticData('global');\n\nif (!staticData.lastSent) {\n  staticData.lastSent = 0;\n}\n\nconst lastSent = staticData.lastSent;\nconsole.log(\"lasSent: \", lastSent);\n\n// Gunakan $timezone agar otomatis mengikuti Docker ENV\nconst localTime = $now.setZone(\"Asia/Jakarta\"); \n\nconst nowMillis = localTime.toMillis();\nconst hour = localTime.hour;\nconst weekday = localTime.weekday;\n\nconsole.log(\"date: \", localTime);\n\n// 1. Tentukan Status Hari & Jam Kerja\nconst isWeekDay = weekday >= 1 && weekday <= 5; // Senin - Jumat\nconst isWorkingHour = hour >= 9 && hour < 23;   // 09:00 - 17:59\n\n// 2. Tentukan Interval Dinamis (Hanya diatur jika dalam jam kerja)\nlet intervalMinutes = 20; \nif (hour >= 12 && hour < 15) {\n  intervalMinutes = 30; // Istirahat/Siang lebih lambat\n} else if (hour >= 15 && hour < 18) {\n  intervalMinutes = 5;  // Sore lebih cepat\n}\n\n// 3. Hitung Selisih (Gunakan Math.floor agar bersih)\nconst diffMinutes = Math.floor((nowMillis - staticData.lastSent) / 60000);\n\n// 4. Syarat Pengiriman\nconst shouldSend = isWeekDay && isWorkingHour && diffMinutes >= intervalMinutes;\n\n// 5. Update lastSent jika memenuhi syarat\nif (shouldSend) {\n  staticData.lastSent = nowMillis;\n}\n\nreturn [{\n  json: {\n    currentTime: localTime.toString(),\n    nowMillis,\n    lastSent,\n    hour,\n    weekday,\n    diffMinutes,\n    intervalMinutes,\n    isWorkingHour,\n    shouldSend,\n    // Informasi tambahan untuk debugging\n    nextExecutionExpected: shouldSend ? \"Now\" : `Wait ${intervalMinutes - diffMinutes} min`\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        96
+      ],
+      "id": "0abe86a9-472c-404b-b917-98753f5ba8d2",
+      "name": "Check & Update Last Sent"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        448,
+        192
+      ],
+      "id": "f983838e-8f6a-4b2e-b88f-9e8164790d2f",
+      "name": "Select rows from a table",
+      "credentials": {
+        "postgres": {
+          "id": "WBmFYL54lLnvoiz9",
+          "name": "Postgres account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Check & Update Last Sent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message": {
+      "main": [
+        []
+      ]
+    },
+    "If: Should Send Now?": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check & Update Last Sent": {
+      "main": [
+        [
+          {
+            "node": "If: Should Send Now?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Select rows from a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "f2a24803-cc64-469f-8fcb-47a1ce1179d5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e633a847c170d983345c2fa6d1504473ac10f4fafbd95a2744148c2669a94080"
+  },
+  "id": "OZgaBC1a9kIMVzATDqvqM",
+  "tags": []
+}
